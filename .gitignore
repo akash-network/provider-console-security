@@ -36,5 +36,8 @@ lerna-debug.log*
 
 # Environment
 .env
+.env.production
 .env.development.local
 .env.development
+
+/k8s
