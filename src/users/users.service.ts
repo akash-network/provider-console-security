@@ -35,7 +35,7 @@ export class UsersService {
   async updateNonceByAddress(address: string, nonce: string): Promise<boolean> {
     await this.userModel.updateOne(
       { address: address },
-      { $set: { nonce: nonce } },
+      { $set: { nonce: nonce, updated_at: new Date() } },
     );
     return true;
   }
