@@ -16,12 +16,17 @@ import configuration from './config/configuration';
     // Asynchronous Mongoose module initialization for MongoDB integration
     MongooseModule.forRootAsync({
       imports: [ConfigModule], // Dependency on ConfigModule
-      useFactory: async (configService: ConfigService) => ({
-        // Configure MongoDB connection string dynamically based on environment config
-        uri: `${configService.get(
-          'mongodb.connectionString',
-        )}/${configService.get('mongodb.name')}`,
-      }),
+      useFactory: async (configService: ConfigService) => {
+        // The database is selected via dbName rather than appended to the URI, so the
+        // connection string may carry its own path and query options (authSource, tls, ...)
+        const caCert = configService.get('mongodb.tlsCaCert');
+        return {
+          uri: configService.get('mongodb.connectionString'),
+          dbName: configService.get('mongodb.name'),
+          // CA certificate content supplied via environment (e.g. Doppler) instead of a tlsCAFile path
+          ...(caCert ? { tls: true, ca: caCert } : {}),
+        };
+      },
       inject: [ConfigService], // Inject ConfigService to use in the factory function
     }),
 
