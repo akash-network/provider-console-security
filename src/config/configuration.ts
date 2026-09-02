@@ -7,9 +7,12 @@ export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
 
   // MongoDB configuration details including connection string and database name.
+  // tlsCaCert holds the PEM content of the CA certificate (not a file path), for
+  // self-hosted MongoDB with TLS; leave unset for connections that need no custom CA.
   mongodb: {
     connectionString: process.env.MONGO_DB_CONNECTION_STRING,
     name: process.env.MONGO_DB_NAME,
+    tlsCaCert: process.env.MONGO_TLS_CA_CERT,
   },
 
   // Security keys used for cryptographic operations.
